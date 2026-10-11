@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imperio Lian · Diseño Digital de Autor</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700;900&family=Inter:wght@300;400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #d4af37;
+    --gold-light: #f4d06f;
+    --purple: #6b46c1;
+    --purple-deep: #4c1d95;
+    --dark: #0a0a0f;
+    --darker: #050508;
+    --card: rgba(255, 255, 255, 0.03);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--darker);
+    color: #f5f5f7;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* FONDO ANIMADO */
+  .bg-glow {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .bg-glow::before,
+  .bg-glow::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.4;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  .bg-glow::before {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, var(--purple) 0%, transparent 70%);
+    top: -100px; left: -100px;
+  }
+
+  .bg-glow::after {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+    bottom: -150px; right: -150px;
+    animation-delay: -10s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(100px, -50px) scale(1.2); }
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    background: rgba(5, 5, 8, 0.7);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.1em;
+  }
+
+  .logo span {
+    font-weight: 400;
+    opacity: 0.7;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 400;
+    transition: color 0.3s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -6px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    position: relative;
+  }
+
+  .hero-content {
+    max-width: 900px;
+    animation: fadeUp 1.2s ease-out;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-badge {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 50px;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2rem;
+    backdrop-filter: blur(10px);
+    background: rgba(212, 175, 55, 0.05);
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-title .line1 {
+    display: block;
+    background: linear-gradient(135deg, #fff 0%, #ccc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-title .line2 {
+    display: block;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: #aaa;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    font-weight: 300;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn {
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+    border: none;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+    color: #000;
+    box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 50px rgba(212, 175, 55, 0.5);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-3px);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    opacity: 0.6;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* SECCIONES */
+  section {
+    padding: 7rem 4rem;
+    position: relative;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+
+  .section-tag {
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .section-title em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-desc {
+    color: #999;
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 1.05rem;
+  }
+
+  /* SERVICIOS */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .service-card {
+    background: var(--card);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    backdrop-filter: blur(20px);
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  .service-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(212, 175, 55, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .service-card:hover::before { opacity: 1; }
+
+  .service-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(107, 70, 193, 0.15));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+  }
+
+  .service-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .service-card p {
+    color: #999;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+  }
+
+  .service-features {
+    list-style: none;
+    margin-bottom: 2rem;
+  }
+
+  .service-features li {
+    padding: 0.5rem 0;
+    color: #bbb;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .service-features li::before {
+    content: '✦';
+    color: var(--gold);
+    font-size: 0.8rem;
+  }
+
+  .service-price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    margin-bottom: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .service-price .currency {
+    font-size: 1.2rem;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .service-price .amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+
+  .service-price .period {
+    color: #777;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  /* PRECIOS DESTACADOS */
+  .pricing-section {
+    background: linear-gradient(180deg, transparent 0%, rgba(107, 70, 193, 0.05) 50%, transparent 100%);
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .price-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: all 0.4s;
+    position: relative;
+  }
+
+  .price-card.featured {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(107, 70, 193, 0.08));
+    border-color: rgba(212, 175, 55, 0.3);
+    transform: scale(1.05);
+  }
+
+  .price-card.featured::before {
+    content: 'POPULAR';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #000;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+  }
+
+  .price-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(212, 175, 55, 0.4);
+  }
+
+  .price-card.featured:hover {
+    transform: scale(1.05) translateY(-5px);
+  }
+
+  .price-card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .price-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .price-card .price {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin: 1rem 0;
+  }
+
+  .price-card .price small {
+    font-size: 1rem;
+    color: #777;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+  }
+
+  /* POR QUÉ ELEGIRNOS */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .why-item {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .why-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .why-item h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .why-item p {
+    color: #888;
+    font-size: 0.9rem;
+  }
+
+  /* CTA FINAL */
+  .cta-section {
+    text-align: center;
+    padding: 8rem 4rem;
+    position: relative;
+  }
+
+  .cta-box {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 5rem 3rem;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(107, 70, 193, 0.08));
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 30px;
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-box::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+    animation: rotate 20s linear infinite;
+  }
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .cta-box > * { position: relative; z-index: 2; }
+
+  .cta-box h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 1rem;
+  }
+
+  .cta-box p {
+    color: #aaa;
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 4rem 4rem 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+
+  .footer-tagline {
+    color: #777;
+    font-style: italic;
+    margin-bottom: 2rem;
+  }
+
+  .footer-contact {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .footer-contact a {
+    color: #aaa;
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    transition: color 0.3s;
+  }
+
+  .footer-contact a:hover { color: var(--gold); }
+
+  .footer-bottom {
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.75rem;
+    color: #555;
+    letter-spacing: 0.15em;
+  }
+
+  /* REVEAL ANIMATION */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 5rem 1.5rem 3rem; }
+    .cta-section { padding: 4rem 1.5rem; }
+    .cta-box { padding: 3rem 1.5rem; }
+    footer { padding: 3rem 1.5rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<nav>
+  <div class="logo">IMPERIO <span>LIAN</span></div>
+  <ul class="nav-links">
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#precios">Precios</a></li>
+    <li><a href="#porque">Por qué</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">✦ Diseño Digital Premium </div>
+    <h1 class="hero-title">
+      <span class="line1">Tu marca merece</span>
+      <span class="line2">ser imparable</span>
+    </h1>
+    <p class="hero-subtitle">
+      Menús digitales, logos y videos publicitarios que convierten miradas en clientes. Diseño con alma imperial.
+    </p>
+    <div class="hero-cta">
+      <a href="#precios" class="btn btn-primary">Ver Precios</a>
+      <a href="#contacto" class="btn btn-secondary">Contactar</a>
+    </div>
+  </div>
+  <div class="scroll-hint">SCROLL ↓</div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios">
+  <div class="section-header reveal">
+    <span class="section-tag">Nuestros Servicios</span>
+    <h2 class="section-title">Lo que <em>creamos</em> para ti</h2>
+    <p class="section-desc">Tres pilares para hacer que tu negocio destaque en el mundo digital.</p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-icon">📱</div>
+      <h3>Menús Digitales</h3>
+      <p>Menús interactivos y elegantes que tus clientes pueden ver desde su celular. Sin impresiones, sin complicaciones.</p>
+      <ul class="service-features">
+        <li>Diseño personalizado</li>
+        <li>Compatible con QR</li>
+        <li>Actualizaciones fáciles</li>
+        <li>Entrega en 48h</li>
+      </ul>
+      <div class="service-price">
+        <span class="currency">$</span>
+        <span class="amount">400</span>
+        <span class="period">CUP</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-icon">✦</div>
+      <h3>Logos</h3>
+      <p>Identidad visual que cuenta la historia de tu marca. Diseños únicos, memorables y atemporales.</p>
+      <ul class="service-features">
+        <li>3 propuestas iniciales</li>
+        <li>Revisiones ilimitadas</li>
+        <li>Archivos en alta resolución</li>
+        <li>Manual de marca básico</li>
+      </ul>
+      <div class="service-price">
+        <span class="currency">$</span>
+        <span class="amount">500</span>
+        <span class="period">CUP</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-icon">🎬</div>
+      <h3>Videos Publicitarios</h3>
+      <p>Contenido audiovisual que vende. Videos cortos, dinámicos y optimizados para redes sociales.</p>
+      <ul class="service-features">
+        <li>Duración 15-60 segundos</li>
+        <li>Música y efectos incluidos</li>
+        <li>Formato vertical y horizontal</li>
+        <li>Listo para Instagram/TikTok</li>
+      </ul>
+      <div class="service-price">
+        <span class="currency">$</span>
+        <span class="amount">650</span>
+        <span class="period">CUP</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRECIOS RÁPIDOS -->
+<section class="pricing-section" id="precios">
+  <div class="section-header reveal">
+    <span class="section-tag">Precios Claros</span>
+    <h2 class="section-title">Sin sorpresas, <em>sin letra chica</em></h2>
+  </div>
+
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="icon">📱</div>
+      <h4>Menú Digital</h4>
+      <div class="price">$400 <small>CUP</small></div>
+    </div>
+    <div class="price-card featured reveal">
+      <div class="icon">✦</div>
+      <h4>Logo Profesional</h4>
+      <div class="price">$500 <small>CUP</small></div>
+    </div>
+    <div class="price-card reveal">
+      <div class="icon">🎬</div>
+      <h4>Video Publicitario</h4>
+      <div class="price">$650 <small>CUP</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- POR QUÉ -->
+<section id="porque">
+  <div class="section-header reveal">
+    <span class="section-tag">Por qué Imperio Lian</span>
+    <h2 class="section-title">Diseño que <em>funciona</em></h2>
+  </div>
+
+  <div class="why-grid">
+    <div class="why-item reveal">
+      <div class="why-number">48h</div>
+      <h4>Entrega Rápida</h4>
+      <p>Tu proyecto listo en tiempo récord, sin sacrificar calidad.</p>
+    </div>
+    <div class="why-item reveal">
+      <div class="why-number">100%</div>
+      <h4>Personalizado</h4>
+      <p>Cada diseño es único, hecho a la medida de tu marca.</p>
+    </div>
+    <div class="why-item reveal">
+      <div class="why-number">∞</div>
+      <h4>Revisiones</h4>
+      <p>Trabajamos hasta que quedes 100% satisfecho.</p>
+    </div>
+    <div class="why-item reveal">
+      <div class="why-number">★</div>
+      <h4>Calidad Premium</h4>
+      <p>Estética de alto nivel a precios accesibles.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section" id="contacto">
+  <div class="cta-box reveal">
+    <span class="section-tag">¿Listo para empezar?</span>
+    <h2>Hagamos algo <em style="font-style: italic; background: linear-gradient(135deg, var(--gold), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">increíble</em> juntos</h2>
+    <p>Escríbenos y convierte tu idea en una pieza de diseño que destaque.</p>
+    <div class="hero-cta">
+      <a href="https://wa.me/5356487239" class="btn btn-primary" target="_blank">WhatsApp</a>
+      <a href="mailto:retermiguel@gmail.com" class="btn btn-secondary">Enviar Correo</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">IMPERIO LIAN</div>
+  <div class="footer-tagline">Diseño digital con alma imperial</div>
+  <div class="footer-contact">
+    <a href="https://wa.me/5356487239" target="_blank">WhatsApp: +53 56487239</a>
+    <a href="mailto:retermiguel@gmail.com">retermiguel@gmail.com</a>
+  </div>
+  <div class="footer-bottom">
+    © 2026 · Imperio Lian · Todos los derechos reservados
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Parallax suave en hero
+  window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const hero = document.querySelector('.hero-content');
+    if (hero && scrolled < window.innerHeight) {
+      hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+      hero.style.opacity = 1 - (scrolled / window.innerHeight);
+    }
+  });
+</script>
+
+</body>
+</html>
